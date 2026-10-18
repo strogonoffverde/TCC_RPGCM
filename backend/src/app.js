@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const pool = require('./config/db');
+const authRoutes = require('./routes/auth');
+const usuariosRoutes = require('./routes/usuarios');
 
 const app = express();
 
@@ -22,9 +24,12 @@ app.get('/api/saude/banco', async (req, res) => {
     res.json({ status: 'Banco conectado', tabelas: linhas[0].total });
   } catch (erro) {
     console.error('Erro ao conectar no banco:', erro.message);
-    res.status(500).json({ erro: 'Não foi possível conectar ao banco' });
+    res.status(500).json({ erro: 'Não deu para conectar ao banco' });
   }
 });
+
+app.use('/api/auth', authRoutes);
+app.use('/api/usuarios', usuariosRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ erro: 'não encontramos' });
