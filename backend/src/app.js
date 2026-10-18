@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const pool = require('./config/db');
 
 const app = express();
 
@@ -10,6 +11,19 @@ app.use(express.json());
 
 app.get('/api/saude', (req, res) => {
   res.json({ status: 'Tudo ok', sistema: 'RPGCM' });
+});
+
+app.get('/api/saude/banco', async (req, res) => {
+  try {
+    const [linhas] = await pool.query(
+      'SELECT COUNT(*) AS total FROM information_schema.tables WHERE table_schema = ?',
+      [process.env.DB_NAME]
+    );
+    res.json({ status: 'Banco conectado', tabelas: linhas[0].total });
+  } catch (erro) {
+    console.error('Erro ao conectar no banco:', erro.message);
+    res.status(500).json({ erro: 'Não foi possível conectar ao banco' });
+  }
 });
 
 app.use((req, res) => {
