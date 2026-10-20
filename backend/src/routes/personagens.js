@@ -105,5 +105,53 @@ router.post('/', async (req, res) => {
     }
   }
 });
+const esquemaListar = z.object({
+  nome: z.string().trim().max(100).optional(),
+  id_raca: z.coerce.number().int().positive().optional(),
+  id_classe: z.coerce.number().int().positive().optional(),
+});
 
+router.get('/', async (req, res) => {
+  const filtros = esquemaListar.safeParse(req.query);
+  if (!filtros.success) {
+    return res.status(400).json({ erro: 'Filtros inválidos', campos: camposInvalidos(filtros) });
+  }
+
+  const { nome, id_raca, id_classe } = filtros.data;
+
+  const condicoes = ['p.id_usuario = ?'];
+  const valores = [req.usuario.id_usuario];
+
+  if (nome) {
+    const padrao = '%' + nome.replace(/[\\%_]/g, '\\$&') + '%';
+    condicoes.push('p.nome LIKE ?');
+    valores.push(padrao);
+  }
+  if (id_raca) {
+    condicoes.push('p.id_raca = ?');
+    valores.push(id_raca);
+  }
+  if (id_classe) {
+    condicoes.push('p.id_classe = ?');
+    valores.push(id_classe);
+  }
+
+  try {
+    const [linhas] = await pool.query(
+      `SELECT p.id_personagem, p.nome, p.nivel, p.xp, p.descricao, p.data_criacao,
+              r.id_raca, r.nome AS raca,
+              c.id_classe, c.nome AS classe
+       FROM personagem p
+       JOIN raca r ON r.id_raca = p.id_raca
+       JOIN classe c ON c.id_classe = p.id_classe
+       WHERE ${condicoes.join(' AND ')}
+       ORDER BY p.nome`,
+      valores
+    );
+    res.json(linhas);
+  } catch (erro) {
+    console.error('Erro ao listar personagens:', erro.message);
+    res.status(500).json({ erro: 'Erro interno do servidor' });
+  }
+});
 module.exports = router;
