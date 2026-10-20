@@ -165,7 +165,6 @@ router.get('/:id', async (req, res) => {
   const idPersonagem = id.data;
 
   try {
-    // O filtro por id_usuario vem do token: só o dono vê a ficha.
     const [linhas] = await pool.query(
       `SELECT p.id_personagem, p.nome, p.nivel, p.xp, p.descricao, p.data_criacao,
               r.id_raca, r.nome AS raca,
@@ -226,6 +225,141 @@ router.get('/:id', async (req, res) => {
     });
   } catch (erro) {
     console.error('Erro ao buscar personagem:', erro.message);
+    res.status(500).json({ erro: 'Erro interno do servidor' });
+  }
+});
+const esquemaAtualizar = z.object({
+  nome: z.string().trim().min(2).max(100).optional(),
+  id_raca: z.number().int().positive().optional(),
+  id_classe: z.number().int().positive().optional(),
+  nivel: z.number().int().min(1).max(20).optional(),
+  xp: z.number().int().min(0).max(1000000).optional(),
+  descricao: z.string().trim().max(2000).nullable().optional(),
+  atributos: z
+    .object({
+      forca: valorAtributo,
+      destreza: valorAtributo,
+      constituicao: valorAtributo,
+      inteligencia: valorAtributo,
+      sabedoria: valorAtributo,
+      carisma: valorAtributo,
+    })
+    .optional(),
+});
+
+const COLUNAS_PERSONAGEM = ['nome', 'id_raca', 'id_classe', 'nivel', 'xp', 'descricao'];
+
+router.put('/:id', async (req, res) => {
+  const id = esquemaId.safeParse(req.params.id);
+  if (!id.success) {
+    return res.status(400).json({ erro: 'Identificador inválido' });
+  }
+
+  const dados = esquemaAtualizar.safeParse(req.body);
+  if (!dados.success) {
+    return res.status(400).json({ erro: 'Dados inválidos', campos: camposInvalidos(dados) });
+  }
+
+  const idPersonagem = id.data;
+
+  const camposPersonagem = [];
+  const valoresPersonagem = [];
+  for (const coluna of COLUNAS_PERSONAGEM) {
+    if (dados.data[coluna] !== undefined) {
+      camposPersonagem.push(`${coluna} = ?`);
+      valoresPersonagem.push(dados.data[coluna]);
+    }
+  }
+
+  const camposAtributos = [];
+  const valoresAtributos = [];
+  for (const chave of CHAVES_ATRIBUTOS) {
+    const valor = (dados.data.atributos || {})[chave];
+    if (valor !== undefined) {
+      camposAtributos.push(`${chave} = ?`);
+      valoresAtributos.push(valor);
+    }
+  }
+
+  if (camposPersonagem.length === 0 && camposAtributos.length === 0) {
+    return res.status(400).json({ erro: 'Nenhum campo para atualizar' });
+  }
+
+  let conexao;
+  try {
+    conexao = await pool.getConnection();
+
+    const [dono] = await conexao.query(
+      'SELECT id_personagem FROM personagem WHERE id_personagem = ? AND id_usuario = ?',
+      [idPersonagem, req.usuario.id_usuario]
+    );
+    if (dono.length === 0) {
+      return res.status(404).json({ erro: 'Personagem não encontrado' });
+    }
+
+    if (dados.data.id_raca !== undefined) {
+      const [racas] = await conexao.query('SELECT id_raca FROM raca WHERE id_raca = ?', [dados.data.id_raca]);
+      if (racas.length === 0) {
+        return res.status(400).json({ erro: 'Raça ou classe inválida' });
+      }
+    }
+    if (dados.data.id_classe !== undefined) {
+      const [classes] = await conexao.query('SELECT id_classe FROM classe WHERE id_classe = ?', [dados.data.id_classe]);
+      if (classes.length === 0) {
+        return res.status(400).json({ erro: 'Raça ou classe inválida' });
+      }
+    }
+
+    await conexao.beginTransaction();
+
+    if (camposPersonagem.length > 0) {
+      await conexao.query(
+        `UPDATE personagem SET ${camposPersonagem.join(', ')} WHERE id_personagem = ? AND id_usuario = ?`,
+        [...valoresPersonagem, idPersonagem, req.usuario.id_usuario]
+      );
+    }
+    if (camposAtributos.length > 0) {
+      await conexao.query(
+        `UPDATE atributos SET ${camposAtributos.join(', ')} WHERE id_personagem = ?`,
+        [...valoresAtributos, idPersonagem]
+      );
+    }
+
+    await conexao.commit();
+
+    res.json({ mensagem: 'Personagem atualizado', id_personagem: idPersonagem });
+  } catch (erro) {
+    if (conexao) {
+      await conexao.rollback().catch(() => {});
+    }
+    console.error('Erro ao atualizar personagem:', erro.message);
+    res.status(500).json({ erro: 'Erro interno do servidor' });
+  } finally {
+    if (conexao) {
+      conexao.release();
+    }
+  }
+});
+
+router.delete('/:id', async (req, res) => {
+  const id = esquemaId.safeParse(req.params.id);
+  if (!id.success) {
+    return res.status(400).json({ erro: 'Identificador inválido' });
+  }
+
+  try {
+    const [resultado] = await pool.query(
+      'DELETE FROM personagem WHERE id_personagem = ? AND id_usuario = ?',
+      [id.data, req.usuario.id_usuario]
+    );
+
+    if (resultado.affectedRows === 0) {
+      return res.status(404).json({ erro: 'Personagem não encontrado' });
+    }
+
+    res.json({ mensagem: 'Personagem excluído', id_personagem: id.data });
+  } catch (erro) {
+    console.error('Erro ao excluir personagem:', erro.message);
     res.status(500).json({ erro: 'Erro interno do servidor' });
   }
 });
