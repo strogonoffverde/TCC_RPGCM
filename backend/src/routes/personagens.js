@@ -2,6 +2,7 @@ const express = require('express');
 const { z } = require('zod');
 const pool = require('../config/db');
 const autenticar = require('../middlewares/autenticar');
+const { CHAVES_ATRIBUTOS, calcularAtributosFinais, calcularStatus } = require('../services/status');
 
 const router = express.Router();
 
@@ -151,6 +152,80 @@ router.get('/', async (req, res) => {
     res.json(linhas);
   } catch (erro) {
     console.error('Erro ao listar personagens:', erro.message);
+    res.status(500).json({ erro: 'Erro interno do servidor' });
+  }
+});
+const esquemaId = z.coerce.number().int().positive();
+
+router.get('/:id', async (req, res) => {
+  const id = esquemaId.safeParse(req.params.id);
+  if (!id.success) {
+    return res.status(400).json({ erro: 'Identificador inválido' });
+  }
+  const idPersonagem = id.data;
+
+  try {
+    // O filtro por id_usuario vem do token: só o dono vê a ficha.
+    const [linhas] = await pool.query(
+      `SELECT p.id_personagem, p.nome, p.nivel, p.xp, p.descricao, p.data_criacao,
+              r.id_raca, r.nome AS raca,
+              r.bonus_forca, r.bonus_destreza, r.bonus_constituicao,
+              r.bonus_inteligencia, r.bonus_sabedoria, r.bonus_carisma,
+              c.id_classe, c.nome AS classe, c.vida_base, c.mana_base,
+              a.forca, a.destreza, a.constituicao, a.inteligencia, a.sabedoria, a.carisma
+       FROM personagem p
+       JOIN raca r ON r.id_raca = p.id_raca
+       JOIN classe c ON c.id_classe = p.id_classe
+       JOIN atributos a ON a.id_personagem = p.id_personagem
+       WHERE p.id_personagem = ? AND p.id_usuario = ?`,
+      [idPersonagem, req.usuario.id_usuario]
+    );
+
+    if (linhas.length === 0) {
+      return res.status(404).json({ erro: 'Personagem não encontrado' });
+    }
+    const p = linhas[0];
+
+    const [equipados] = await pool.query(
+      `SELECT e.id_equipamento, i.nome, e.bonus_ataque, e.bonus_defesa,
+              e.bonus_atributo, e.bonus_atributo_valor
+       FROM personagem_equipamento pe
+       JOIN equipamento e ON e.id_equipamento = pe.id_equipamento
+       JOIN item i ON i.id_item = e.id_item
+       WHERE pe.id_personagem = ? AND pe.equipado = 1`,
+      [idPersonagem]
+    );
+
+    const atributosBase = {};
+    for (const chave of CHAVES_ATRIBUTOS) {
+      atributosBase[chave] = p[chave];
+    }
+
+    const atributosFinais = calcularAtributosFinais(atributosBase, p, equipados);
+
+    const status = calcularStatus({
+      nivel: p.nivel,
+      classe: { vida_base: p.vida_base, mana_base: p.mana_base },
+      atributosFinais,
+      equipamentos: equipados,
+    });
+
+    res.json({
+      id_personagem: p.id_personagem,
+      nome: p.nome,
+      nivel: p.nivel,
+      xp: p.xp,
+      descricao: p.descricao,
+      data_criacao: p.data_criacao,
+      raca: { id_raca: p.id_raca, nome: p.raca },
+      classe: { id_classe: p.id_classe, nome: p.classe },
+      atributos_base: atributosBase,
+      atributos_finais: atributosFinais,
+      equipamentos_equipados: equipados,
+      status,
+    });
+  } catch (erro) {
+    console.error('Erro ao buscar personagem:', erro.message);
     res.status(500).json({ erro: 'Erro interno do servidor' });
   }
 });
