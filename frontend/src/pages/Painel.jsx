@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import CartaoPersonagem from '../components/CartaoPersonagem'
 import { removerToken } from '../services/api'
 import { buscarPersonagem, listarPersonagens } from '../services/personagens'
@@ -50,9 +50,14 @@ export default function Painel() {
           <h1>Meus personagens</h1>
           <p className="subtitulo">Suas fichas de aventureiros.</p>
         </div>
-        <button type="button" className="botao-secundario" onClick={sair}>
-          Sair
-        </button>
+              <div className="acoes">
+          <Link to="/personagens/novo" className="botao-link botao-principal">
+            Novo personagem
+          </Link>
+          <button type="button" className="botao-secundario" onClick={sair}>
+            Sair
+          </button>
+        </div>
       </header>
 
       {carregando && <p className="subtitulo">Carregando fichas...</p>}

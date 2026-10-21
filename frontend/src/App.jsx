@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import Login from './pages/Login'
 import Cadastro from './pages/Cadastro'
 import Painel from './pages/Painel'
+import NovoPersonagem from './pages/NovoPersonagem'
 import { lerToken } from './services/api'
 
 function RotaProtegida({ children }) {
@@ -18,6 +19,14 @@ export default function App() {
         element={
           <RotaProtegida>
             <Painel />
+          </RotaProtegida>
+        }
+      />
+      <Route
+        path="/personagens/novo"
+        element={
+          <RotaProtegida>
+            <NovoPersonagem />
           </RotaProtegida>
         }
       />
