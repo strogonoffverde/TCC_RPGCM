@@ -304,7 +304,12 @@ button {
   max-width: none;
 }
 
-.ficha-topo {
+ .ficha-topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
   margin-bottom: 1rem;
 }
 
@@ -362,4 +367,33 @@ button {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--texto-suave);
+}
+.botao-perigo {
+  background: transparent;
+  border-color: var(--acento);
+  color: var(--acento-claro);
+}
+
+.botao-perigo:hover:not(:disabled) {
+  background: var(--acento);
+  color: #ffffff;
+}
+
+.botao-perigo:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.confirmacao {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: rgba(255, 110, 90, 0.1);
+  border: 1px solid var(--acento);
+  border-radius: 8px;
+}
+
+.confirmacao p {
+  margin: 0;
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { removerToken } from '../services/api'
-import { buscarPersonagem } from '../services/personagens'
+import { buscarPersonagem, excluirPersonagem } from '../services/personagens'
 
 const ROTULOS_ATRIBUTOS = {
   forca: 'Força',
@@ -31,6 +31,8 @@ export default function Ficha() {
   const [ficha, setFicha] = useState(null)
   const [erro, setErro] = useState('')
   const [carregando, setCarregando] = useState(true)
+  const [confirmando, setConfirmando] = useState(false)
+  const [excluindo, setExcluindo] = useState(false)
 
   useEffect(() => {
     let ativo = true
@@ -57,12 +59,49 @@ export default function Ficha() {
     }
   }, [id, navigate])
 
+  async function excluir() {
+    setErro('')
+    setExcluindo(true)
+    try {
+      await excluirPersonagem(id)
+      navigate('/painel')
+    } catch (e) {
+      if (e.status === 401) {
+        removerToken()
+        navigate('/login')
+        return
+      }
+      setErro(e.message)
+      setConfirmando(false)
+      setExcluindo(false)
+    }
+  }
+
   return (
     <main className="painel">
       <div className="ficha-topo">
         <Link to="/painel" className="botao-link botao-secundario">
           Voltar
         </Link>
+
+        {ficha && (
+          <div className="acoes">
+            <Link
+              to={`/personagens/${id}/editar`}
+              className="botao-link botao-secundario"
+            >
+              Editar
+            </Link>
+            <button
+              type="button"
+              className="botao-perigo"
+              onClick={() => setConfirmando(true)}
+              disabled={confirmando}
+            >
+              Excluir
+            </button>
+          </div>
+        )}
       </div>
 
       {carregando && <p className="subtitulo">Carregando ficha...</p>}
@@ -70,6 +109,34 @@ export default function Ficha() {
         <p className="mensagem-erro" role="alert">
           {erro}
         </p>
+      )}
+
+      {confirmando && ficha && (
+        <div className="confirmacao" role="alertdialog">
+          <p>
+            Excluir <strong>{ficha.nome}</strong>? Isso apaga também os
+            atributos, o inventário, as habilidades e os equipamentos dele.
+            Não dá para desfazer.
+          </p>
+          <div className="acoes">
+            <button
+              type="button"
+              className="botao-principal"
+              onClick={excluir}
+              disabled={excluindo}
+            >
+              {excluindo ? 'Excluindo...' : 'Sim, excluir'}
+            </button>
+            <button
+              type="button"
+              className="botao-secundario"
+              onClick={() => setConfirmando(false)}
+              disabled={excluindo}
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
       )}
 
       {ficha && (

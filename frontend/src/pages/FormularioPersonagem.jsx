@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { removerToken } from '../services/api'
 import {
+  atualizarPersonagem,
+  buscarPersonagem,
   criarPersonagem,
   listarClasses,
   listarRacas,
@@ -16,8 +18,11 @@ const ATRIBUTOS = [
   { chave: 'carisma', rotulo: 'Carisma' },
 ]
 
-export default function NovoPersonagem() {
+export default function FormularioPersonagem() {
+  const { id } = useParams()
+  const editando = Boolean(id)
   const navigate = useNavigate()
+
   const [racas, setRacas] = useState([])
   const [classes, setClasses] = useState([])
   const [nome, setNome] = useState('')
@@ -35,21 +40,37 @@ export default function NovoPersonagem() {
     carisma: '10',
   })
   const [erro, setErro] = useState('')
+  const [falhouCarga, setFalhouCarga] = useState(false)
   const [carregando, setCarregando] = useState(true)
   const [salvando, setSalvando] = useState(false)
 
   useEffect(() => {
     let ativo = true
 
-    async function carregarCatalogo() {
+    async function carregar() {
       try {
-        const [listaRacas, listaClasses] = await Promise.all([
+        const [listaRacas, listaClasses, ficha] = await Promise.all([
           listarRacas(),
           listarClasses(),
+          editando ? buscarPersonagem(id) : Promise.resolve(null),
         ])
-        if (ativo) {
-          setRacas(listaRacas)
-          setClasses(listaClasses)
+        if (!ativo) return
+
+        setRacas(listaRacas)
+        setClasses(listaClasses)
+
+        if (ficha) {
+          setNome(ficha.nome)
+          setIdRaca(String(ficha.raca.id_raca))
+          setIdClasse(String(ficha.classe.id_classe))
+          setNivel(String(ficha.nivel))
+          setXp(String(ficha.xp))
+          setDescricao(ficha.descricao ?? '')
+          const base = {}
+          for (const { chave } of ATRIBUTOS) {
+            base[chave] = String(ficha.atributos_base[chave])
+          }
+          setAtributos(base)
         }
       } catch (e) {
         if (e.status === 401) {
@@ -57,17 +78,20 @@ export default function NovoPersonagem() {
           navigate('/login')
           return
         }
-        if (ativo) setErro(e.message)
+        if (ativo) {
+          setErro(e.message)
+          setFalhouCarga(true)
+        }
       } finally {
         if (ativo) setCarregando(false)
       }
     }
 
-    carregarCatalogo()
+    carregar()
     return () => {
       ativo = false
     }
-  }, [navigate])
+  }, [id, editando, navigate])
 
   function mudarAtributo(chave, valor) {
     setAtributos((atual) => ({ ...atual, [chave]: valor }))
@@ -84,7 +108,7 @@ export default function NovoPersonagem() {
         valoresAtributos[chave] = Number(atributos[chave])
       }
 
-      await criarPersonagem({
+      const dados = {
         nome,
         id_raca: Number(idRaca),
         id_classe: Number(idClasse),
@@ -92,8 +116,15 @@ export default function NovoPersonagem() {
         xp: Number(xp),
         descricao: descricao.trim() === '' ? null : descricao,
         atributos: valoresAtributos,
-      })
-      navigate('/painel')
+      }
+
+      if (editando) {
+        await atualizarPersonagem(id, dados)
+        navigate(`/personagens/${id}`)
+      } else {
+        await criarPersonagem(dados)
+        navigate('/painel')
+      }
     } catch (e) {
       if (e.status === 401) {
         removerToken()
@@ -106,12 +137,33 @@ export default function NovoPersonagem() {
     }
   }
 
+  const destinoVoltar = editando ? `/personagens/${id}` : '/painel'
+
+  if (falhouCarga) {
+    return (
+      <main className="painel">
+        <div className="cartao cartao-largo">
+          <p className="mensagem-erro" role="alert">
+            {erro}
+          </p>
+          <Link to="/painel" className="botao-link botao-secundario">
+            Voltar ao painel
+          </Link>
+        </div>
+      </main>
+    )
+  }
+
   return (
     <main className="painel">
       <form className="cartao cartao-largo formulario" onSubmit={enviar}>
         <div>
-          <h1>Novo personagem</h1>
-          <p className="subtitulo">Preencha os dados básicos da ficha.</p>
+          <h1>{editando ? 'Editar personagem' : 'Novo personagem'}</h1>
+          <p className="subtitulo">
+            {editando
+              ? 'Altere os dados e salve a ficha.'
+              : 'Preencha os dados básicos da ficha.'}
+          </p>
         </div>
 
         <label>
@@ -233,9 +285,13 @@ export default function NovoPersonagem() {
             className="botao-principal"
             disabled={carregando || salvando}
           >
-            {salvando ? 'Salvando...' : 'Criar personagem'}
+            {salvando
+              ? 'Salvando...'
+              : editando
+                ? 'Salvar alterações'
+                : 'Criar personagem'}
           </button>
-          <Link to="/painel" className="botao-link botao-secundario">
+          <Link to={destinoVoltar} className="botao-link botao-secundario">
             Cancelar
           </Link>
         </div>

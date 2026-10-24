@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import Login from './pages/Login'
 import Cadastro from './pages/Cadastro'
 import Painel from './pages/Painel'
-import NovoPersonagem from './pages/NovoPersonagem'
+import FormularioPersonagem from './pages/FormularioPersonagem'
 import Ficha from './pages/Ficha'
 import { lerToken } from './services/api'
 
@@ -27,7 +27,15 @@ export default function App() {
         path="/personagens/novo"
         element={
           <RotaProtegida>
-            <NovoPersonagem />
+            <FormularioPersonagem />
+          </RotaProtegida>
+        }
+      />
+      <Route
+        path="/personagens/:id/editar"
+        element={
+          <RotaProtegida>
+            <FormularioPersonagem />
           </RotaProtegida>
         }
       />
