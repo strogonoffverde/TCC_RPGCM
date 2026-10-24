@@ -1,14 +1,15 @@
 :root {
-  --fundo: #121214;
-  --superficie: #1b1b1f;
-  --superficie-2: #24242a;
-  --borda: #34343c;
-  --texto: #e8e4dc;
-  --texto-suave: #a39e94;
-  --ambar: #c8843a;
-  --ambar-claro: #e0a35c;
+  --fundo: #1c1d20;
+  --superficie: #2a2c31;
+  --superficie-2: #33363c;
+  --borda: #464a52;
+  --texto: #ecebe8;
+  --texto-suave: #aeb2b8;
+  --acento: #c0392b;
+  --acento-claro: #f0705f;
+  --acento-hover: #d44a3b;
   --verde-azulado: #4aa3a3;
-  --erro: #e07a6a;
+  --erro: #ff9e92;
   --fonte-titulo: Georgia, 'Times New Roman', serif;
   --fonte-texto: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   color-scheme: dark;
@@ -23,7 +24,7 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: radial-gradient(circle at top, #1d1a17 0%, var(--fundo) 55%);
+  background: radial-gradient(circle at top, #2b2d33 0%, var(--fundo) 60%);
   color: var(--texto);
   font-family: var(--fonte-texto);
   line-height: 1.5;
@@ -40,7 +41,7 @@ h3 {
 
 h1 {
   font-size: 1.6rem;
-  color: var(--ambar-claro);
+  color: var(--acento-claro);
 }
 
 a {
@@ -62,7 +63,7 @@ a {
   padding: 1.75rem 1.5rem;
   background: var(--superficie);
   border: 1px solid var(--borda);
-  border-top: 3px solid var(--ambar);
+  border-top: 3px solid var(--acento);
   border-radius: 10px;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
 }
@@ -79,7 +80,9 @@ label {
   color: var(--texto-suave);
 }
 
-input {
+input,
+select,
+textarea {
   width: 100%;
   padding: 0.7rem 0.8rem;
   background: var(--superficie-2);
@@ -89,9 +92,16 @@ input {
   font: inherit;
 }
 
-input:focus-visible {
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
   outline: 2px solid var(--verde-azulado);
   outline-offset: 1px;
+}
+
+textarea {
+  min-height: 5rem;
+  resize: vertical;
 }
 
 button {
@@ -104,12 +114,12 @@ button {
 }
 
 .botao-principal {
-  background: var(--ambar);
-  color: #1a1208;
+  background: var(--acento);
+  color: #ffffff;
 }
 
 .botao-principal:hover:not(:disabled) {
-  background: var(--ambar-claro);
+  background: var(--acento-hover);
 }
 
 .botao-principal:disabled {
@@ -130,8 +140,8 @@ button {
 .mensagem-erro {
   margin: 0;
   padding: 0.6rem 0.8rem;
-  background: rgba(224, 122, 106, 0.1);
-  border-left: 3px solid var(--erro);
+  background: rgba(255, 110, 90, 0.12);
+  border-left: 3px solid var(--acento);
   border-radius: 4px;
   color: var(--erro);
   font-size: 0.9rem;
@@ -171,14 +181,14 @@ button {
   padding: 1.25rem;
   background: var(--superficie);
   border: 1px solid var(--borda);
-  border-top: 3px solid var(--ambar);
+  border-top: 3px solid var(--acento);
   border-radius: 10px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
 .cartao-personagem h2 {
   font-size: 1.3rem;
-  color: var(--ambar-claro);
+  color: var(--acento-claro);
 }
 
 .barra-rotulo {
@@ -206,7 +216,7 @@ button {
 }
 
 .barra-hp {
-  background: linear-gradient(90deg, #a3402f, var(--erro));
+  background: linear-gradient(90deg, #8f2a20, var(--acento-claro));
 }
 
 .barra-mana {
@@ -236,27 +246,6 @@ button {
   margin: 0;
   font-size: 1.25rem;
   font-weight: 600;
-}
-select,
-textarea {
-  width: 100%;
-  padding: 0.7rem 0.8rem;
-  background: var(--superficie-2);
-  border: 1px solid var(--borda);
-  border-radius: 6px;
-  color: var(--texto);
-  font: inherit;
-}
-
-select:focus-visible,
-textarea:focus-visible {
-  outline: 2px solid var(--verde-azulado);
-  outline-offset: 1px;
-}
-
-textarea {
-  min-height: 5rem;
-  resize: vertical;
 }
 
 .cartao-largo {
@@ -295,6 +284,7 @@ textarea {
   text-align: center;
   text-decoration: none;
 }
+
 .ver-ficha {
   justify-self: start;
   font-weight: 600;
@@ -348,7 +338,7 @@ textarea {
 .destaque-valor {
   font-family: var(--fonte-titulo);
   font-size: 1.6rem;
-  color: var(--ambar-claro);
+  color: var(--acento-claro);
 }
 
 .tabela-rolavel {
