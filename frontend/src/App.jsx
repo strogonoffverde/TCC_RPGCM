@@ -3,6 +3,7 @@ import Login from './pages/Login'
 import Cadastro from './pages/Cadastro'
 import Painel from './pages/Painel'
 import NovoPersonagem from './pages/NovoPersonagem'
+import Ficha from './pages/Ficha'
 import { lerToken } from './services/api'
 
 function RotaProtegida({ children }) {
@@ -27,6 +28,14 @@ export default function App() {
         element={
           <RotaProtegida>
             <NovoPersonagem />
+          </RotaProtegida>
+        }
+      />
+      <Route
+        path="/personagens/:id"
+        element={
+          <RotaProtegida>
+            <Ficha />
           </RotaProtegida>
         }
       />

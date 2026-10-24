@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 function formatarAtaque(valor) {
   return valor >= 0 ? `+${valor}` : String(valor)
 }
@@ -17,7 +19,7 @@ function Barra({ rotulo, valor, classe }) {
 }
 
 export default function CartaoPersonagem({ ficha }) {
-  const { nome, nivel, raca, classe, status } = ficha
+  const { id_personagem, nome, nivel, raca, classe, status } = ficha
 
   return (
     <article className="cartao-personagem">
@@ -46,6 +48,10 @@ export default function CartaoPersonagem({ ficha }) {
           <dd>{formatarAtaque(status.ataque)}</dd>
         </div>
       </dl>
+
+      <Link to={`/personagens/${id_personagem}`} className="ver-ficha">
+        Ver ficha
+      </Link>
     </article>
   )
 }

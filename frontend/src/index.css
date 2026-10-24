@@ -295,3 +295,81 @@ textarea {
   text-align: center;
   text-decoration: none;
 }
+.ver-ficha {
+  justify-self: start;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.ver-ficha:hover {
+  text-decoration: underline;
+}
+
+.ficha {
+  display: grid;
+  gap: 1rem;
+}
+
+.ficha .cartao {
+  max-width: none;
+}
+
+.ficha-topo {
+  margin-bottom: 1rem;
+}
+
+.ficha-descricao {
+  margin: 0.5rem 0 0;
+  white-space: pre-wrap;
+}
+
+.status-grade {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+}
+
+.destaque {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.75rem;
+  background: var(--superficie-2);
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+}
+
+.destaque-rotulo {
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+}
+
+.destaque-valor {
+  font-family: var(--fonte-titulo);
+  font-size: 1.6rem;
+  color: var(--ambar-claro);
+}
+
+.tabela-rolavel {
+  overflow-x: auto;
+}
+
+.tabela-atributos {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabela-atributos th,
+.tabela-atributos td {
+  padding: 0.55rem 0.6rem;
+  text-align: left;
+  border-bottom: 1px solid var(--borda);
+}
+
+.tabela-atributos th {
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+}
