@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import Habilidades from '../components/Habilidades'
+import Inventario from '../components/Inventario'
 import { removerToken } from '../services/api'
 import { buscarPersonagem, excluirPersonagem } from '../services/personagens'
-import Inventario from '../components/Inventario'
 
 const ROTULOS_ATRIBUTOS = {
   forca: 'Força',
@@ -208,7 +209,13 @@ export default function Ficha() {
               </ul>
             )}
           </section>
-                    <Inventario idPersonagem={id} />
+
+          <Habilidades
+            idPersonagem={id}
+            nivelPersonagem={ficha.nivel}
+            manaMaxima={ficha.status.mana}
+          />
+          <Inventario idPersonagem={id} />
         </article>
       )}
     </main>
