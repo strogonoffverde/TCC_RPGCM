@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth');
 const usuariosRoutes = require('./routes/usuarios');
 const catalogoRoutes = require('./routes/catalogo');
 const inventarioRoutes = require('./routes/inventario');
+const habilidadesRoutes = require('./routes/habilidades');
 const personagensRoutes = require('./routes/personagens');
 
 const app = express();
@@ -35,6 +36,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/usuarios', usuariosRoutes);
 app.use('/api', catalogoRoutes);
 app.use('/api/personagens/:id/inventario', inventarioRoutes);
+app.use('/api/personagens/:id/habilidades', habilidadesRoutes);
 app.use('/api/personagens', personagensRoutes);
 
 app.use((req, res) => {

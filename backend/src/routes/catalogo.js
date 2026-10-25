@@ -47,4 +47,18 @@ router.get('/itens', autenticar, async (req, res) => {
   }
 });
 
+router.get('/habilidades', autenticar, async (req, res) => {
+  try {
+    const [linhas] = await pool.query(
+      `SELECT id_habilidade, nome, descricao, tipo, custo_mana, nivel_minimo
+       FROM habilidade
+       ORDER BY nivel_minimo, nome`
+    );
+    res.json(linhas);
+  } catch (erro) {
+    console.error('Erro ao listar habilidades:', erro.message);
+    res.status(500).json({ erro: 'Erro interno do servidor' });
+  }
+});
+
 module.exports = router;
