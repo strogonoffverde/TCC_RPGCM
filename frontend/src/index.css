@@ -397,3 +397,80 @@ button {
 .confirmacao p {
   margin: 0;
 }
+.inventario-cabecalho {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.lista-inventario {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item-inventario {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--superficie-2);
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+}
+
+.item-info {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.item-info p {
+  margin: 0.15rem 0 0;
+}
+
+.etiqueta {
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--verde-azulado);
+  border: 1px solid var(--verde-azulado);
+  border-radius: 999px;
+}
+
+.item-acoes {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quantidade {
+  min-width: 2.5rem;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.botao-pequeno {
+  padding: 0.4rem 0.75rem;
+}
+
+.form-inventario {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .form-inventario {
+    grid-template-columns: 1fr 120px auto;
+    align-items: end;
+  }
+}

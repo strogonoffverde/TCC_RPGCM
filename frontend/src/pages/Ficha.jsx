@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { removerToken } from '../services/api'
 import { buscarPersonagem, excluirPersonagem } from '../services/personagens'
+import Inventario from '../components/Inventario'
 
 const ROTULOS_ATRIBUTOS = {
   forca: 'Força',
@@ -207,6 +208,7 @@ export default function Ficha() {
               </ul>
             )}
           </section>
+                    <Inventario idPersonagem={id} />
         </article>
       )}
     </main>
