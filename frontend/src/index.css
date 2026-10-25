@@ -474,3 +474,20 @@ button {
     align-items: end;
   }
 }
+.etiqueta-aviso {
+  color: var(--erro);
+  border-color: var(--erro);
+}
+
+.form-habilidade {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .form-habilidade {
+    grid-template-columns: 1fr auto;
+    align-items: end;
+  }
+}
