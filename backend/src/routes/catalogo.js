@@ -15,7 +15,7 @@ router.get('/racas', autenticar, async (req, res) => {
     res.json(linhas);
   } catch (erro) {
     console.error('Erro ao listar raças:', erro.message);
-    res.status(500).json({ erro: 'Erro do servidor' });
+    res.status(500).json({ erro: 'Erro interno do servidor' });
   }
 });
 
@@ -29,7 +29,21 @@ router.get('/classes', autenticar, async (req, res) => {
     res.json(linhas);
   } catch (erro) {
     console.error('Erro ao listar classes:', erro.message);
-    res.status(500).json({ erro: 'Erro do servidor' });
+    res.status(500).json({ erro: 'Erro interno do servidor' });
+  }
+});
+
+router.get('/itens', autenticar, async (req, res) => {
+  try {
+    const [linhas] = await pool.query(
+      `SELECT id_item, nome, descricao, tipo, valor
+       FROM item
+       ORDER BY tipo, nome`
+    );
+    res.json(linhas.map((linha) => ({ ...linha, valor: Number(linha.valor) })));
+  } catch (erro) {
+    console.error('Erro ao listar itens:', erro.message);
+    res.status(500).json({ erro: 'Erro interno do servidor' });
   }
 });
 

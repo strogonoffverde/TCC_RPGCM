@@ -5,6 +5,7 @@ const pool = require('./config/db');
 const authRoutes = require('./routes/auth');
 const usuariosRoutes = require('./routes/usuarios');
 const catalogoRoutes = require('./routes/catalogo');
+const inventarioRoutes = require('./routes/inventario');
 const personagensRoutes = require('./routes/personagens');
 
 const app = express();
@@ -32,9 +33,10 @@ app.get('/api/saude/banco', async (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/usuarios', usuariosRoutes);
-
 app.use('/api', catalogoRoutes);
+app.use('/api/personagens/:id/inventario', inventarioRoutes);
 app.use('/api/personagens', personagensRoutes);
+
 app.use((req, res) => {
   res.status(404).json({ erro: 'não encontramos' });
 });
