@@ -8,6 +8,7 @@ const catalogoRoutes = require('./routes/catalogo');
 const inventarioRoutes = require('./routes/inventario');
 const habilidadesRoutes = require('./routes/habilidades');
 const personagensRoutes = require('./routes/personagens');
+const equipamentosRoutes = require('./routes/equipamentos');
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use('/api/usuarios', usuariosRoutes);
 app.use('/api', catalogoRoutes);
 app.use('/api/personagens/:id/inventario', inventarioRoutes);
 app.use('/api/personagens/:id/habilidades', habilidadesRoutes);
+app.use('/api/personagens/:id/equipamentos', equipamentosRoutes);
 app.use('/api/personagens', personagensRoutes);
 
 app.use((req, res) => {
