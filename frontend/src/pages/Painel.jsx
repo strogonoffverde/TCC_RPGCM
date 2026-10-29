@@ -132,6 +132,9 @@ export default function Painel() {
           <Link to="/personagens/novo" className="botao-link botao-principal">
             Novo personagem
           </Link>
+          <Link to="/perfil" className="botao-link botao-secundario">
+            Meu perfil
+          </Link>
           <button type="button" className="botao-secundario" onClick={sair}>
             Sair
           </button>

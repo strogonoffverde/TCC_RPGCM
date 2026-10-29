@@ -535,3 +535,44 @@ button {
     align-items: end;
   }
 }
+.form-perfil {
+  display: grid;
+  gap: 0.85rem;
+  max-width: 520px;
+  margin-top: 0.75rem;
+}
+
+.form-perfil label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+}
+
+.form-perfil input {
+  padding: 0.55rem 0.65rem;
+  background: var(--superficie-2);
+  color: var(--texto);
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  font: inherit;
+}
+
+.form-perfil input:focus {
+  outline: 2px solid var(--verde-azulado);
+  outline-offset: 1px;
+}
+
+.form-perfil input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.mensagem-ok {
+  margin: 0;
+  padding: 0.6rem 0.8rem;
+  color: var(--verde-azulado);
+  border: 1px solid var(--verde-azulado);
+  border-radius: 6px;
+}

@@ -4,6 +4,7 @@ import Cadastro from './pages/Cadastro'
 import Painel from './pages/Painel'
 import FormularioPersonagem from './pages/FormularioPersonagem'
 import Ficha from './pages/Ficha'
+import Perfil from './pages/Perfil'
 import { lerToken } from './services/api'
 
 function RotaProtegida({ children }) {
@@ -20,6 +21,14 @@ export default function App() {
         element={
           <RotaProtegida>
             <Painel />
+          </RotaProtegida>
+        }
+      />
+      <Route
+        path="/perfil"
+        element={
+          <RotaProtegida>
+            <Perfil />
           </RotaProtegida>
         }
       />
