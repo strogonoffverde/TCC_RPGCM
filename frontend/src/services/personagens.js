@@ -1,7 +1,12 @@
 import { requisicao } from './api'
 
-export function listarPersonagens() {
-  return requisicao('/personagens')
+export function listarPersonagens(filtros = {}) {
+  const parametros = new URLSearchParams()
+  if (filtros.nome) parametros.set('nome', filtros.nome)
+  if (filtros.id_raca) parametros.set('id_raca', filtros.id_raca)
+  if (filtros.id_classe) parametros.set('id_classe', filtros.id_classe)
+  const consulta = parametros.toString()
+  return requisicao(consulta ? `/personagens?${consulta}` : '/personagens')
 }
 
 export function buscarPersonagem(id) {
