@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import Equipamentos from '../components/Equipamentos'
 import Habilidades from '../components/Habilidades'
 import Inventario from '../components/Inventario'
 import { removerToken } from '../services/api'
@@ -35,6 +36,7 @@ export default function Ficha() {
   const [carregando, setCarregando] = useState(true)
   const [confirmando, setConfirmando] = useState(false)
   const [excluindo, setExcluindo] = useState(false)
+  const [versao, setVersao] = useState(0)
 
   useEffect(() => {
     let ativo = true
@@ -59,7 +61,11 @@ export default function Ficha() {
     return () => {
       ativo = false
     }
-  }, [id, navigate])
+  }, [id, navigate, versao])
+
+  function atualizar() {
+    setVersao((atual) => atual + 1)
+  }
 
   async function excluir() {
     setErro('')
@@ -197,25 +203,18 @@ export default function Ficha() {
             </p>
           </section>
 
-          <section className="cartao">
-            <h2>Equipamentos equipados</h2>
-            {ficha.equipamentos_equipados.length === 0 ? (
-              <p className="subtitulo">Nenhum equipamento equipado.</p>
-            ) : (
-              <ul>
-                {ficha.equipamentos_equipados.map((item) => (
-                  <li key={item.id_equipamento}>{item.nome}</li>
-                ))}
-              </ul>
-            )}
-          </section>
+          <Equipamentos
+            idPersonagem={id}
+            versao={versao}
+            aoAlterar={atualizar}
+          />
 
           <Habilidades
             idPersonagem={id}
             nivelPersonagem={ficha.nivel}
             manaMaxima={ficha.status.mana}
           />
-          <Inventario idPersonagem={id} />
+          <Inventario idPersonagem={id} aoAlterar={atualizar} />
         </article>
       )}
     </main>

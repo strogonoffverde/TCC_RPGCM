@@ -11,7 +11,7 @@ import {
 
 const LIMITE_QUANTIDADE = 999
 
-export default function Inventario({ idPersonagem }) {
+export default function Inventario({ idPersonagem, aoAlterar }) {
   const navigate = useNavigate()
   const [inventario, setInventario] = useState([])
   const [catalogo, setCatalogo] = useState([])
@@ -65,6 +65,7 @@ export default function Inventario({ idPersonagem }) {
     try {
       await acao()
       setInventario(await listarInventario(idPersonagem))
+      if (aoAlterar) aoAlterar()
     } catch (e) {
       tratarErro(e)
     } finally {
