@@ -576,3 +576,61 @@ button {
   border: 1px solid var(--verde-azulado);
   border-radius: 6px;
 }
+/* Página inicial */
+.inicio-hero {
+  text-align: center;
+  padding: 2.5rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.inicio-hero h1 {
+  font-size: 2.1rem;
+  margin: 0.6rem 0 0.5rem;
+}
+
+.inicio-hero .subtitulo {
+  max-width: 560px;
+  margin: 0 auto 1.25rem;
+}
+
+.inicio-hero .acoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.inicio-secao {
+  margin-bottom: 1.5rem;
+}
+
+.inicio-secao > h2 {
+  margin-bottom: 0.75rem;
+}
+
+.inicio-passos {
+  margin: 0.75rem 0 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.inicio-passos li::marker {
+  color: var(--acento-claro);
+  font-weight: 700;
+}
+
+.inicio-rodape {
+  text-align: center;
+  padding: 1rem 0 2rem;
+}
+
+@media (min-width: 640px) {
+  .inicio-hero {
+    padding: 3.5rem 2rem;
+  }
+
+  .inicio-hero h1 {
+    font-size: 2.8rem;
+  }
+}

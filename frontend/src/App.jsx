@@ -6,6 +6,7 @@ import FormularioPersonagem from './pages/FormularioPersonagem'
 import Ficha from './pages/Ficha'
 import Perfil from './pages/Perfil'
 import { lerToken } from './services/api'
+import Inicio from './pages/Inicio'
 
 function RotaProtegida({ children }) {
   return lerToken() ? children : <Navigate to="/login" replace />
@@ -14,6 +15,8 @@ function RotaProtegida({ children }) {
 export default function App() {
   return (
     <Routes>
+      <Route path="/" element={<Inicio />} />
+<Route path="/login" element={<Login />} />
       <Route path="/login" element={<Login />} />
       <Route path="/cadastro" element={<Cadastro />} />
       <Route
@@ -57,6 +60,7 @@ export default function App() {
         }
       />
       <Route path="*" element={<Navigate to="/login" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }
