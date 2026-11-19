@@ -5,6 +5,7 @@ import Habilidades from '../components/Habilidades'
 import Inventario from '../components/Inventario'
 import { removerToken } from '../services/api'
 import { buscarPersonagem, excluirPersonagem } from '../services/personagens'
+import Retrato from '../components/Retrato'
 
 const ROTULOS_ATRIBUTOS = {
   forca: 'Força',
@@ -149,15 +150,20 @@ export default function Ficha() {
 
       {ficha && (
         <article className="ficha">
-          <header className="cartao">
-            <h1>{ficha.nome}</h1>
-            <p className="subtitulo">
-              {ficha.raca.nome} {ficha.classe.nome} · Nível {ficha.nivel} ·{' '}
-              {ficha.xp} XP
-            </p>
-            {ficha.descricao && (
-              <p className="ficha-descricao">{ficha.descricao}</p>
-            )}
+                   <header className="cartao ficha-cabecalho">
+            <div className="retrato-moldura">
+              <Retrato chave={ficha.retrato} nome={`Retrato de ${ficha.nome}`} />
+            </div>
+            <div>
+              <h1>{ficha.nome}</h1>
+              <p className="subtitulo">
+                {ficha.raca.nome} {ficha.classe.nome} · Nível {ficha.nivel} ·{' '}
+                {ficha.xp} XP
+              </p>
+              {ficha.descricao && (
+                <p className="ficha-descricao">{ficha.descricao}</p>
+              )}
+            </div>
           </header>
 
           <section className="cartao">

@@ -43,6 +43,8 @@ CREATE TABLE personagem (
   nivel INT NOT NULL DEFAULT 1,
   xp INT NOT NULL DEFAULT 0,
   descricao TEXT,
+  retrato VARCHAR(40) NULL,
+  data_criacao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   data_criacao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_personagem_usuario FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario),
   CONSTRAINT fk_personagem_raca FOREIGN KEY (id_raca) REFERENCES raca (id_raca),
