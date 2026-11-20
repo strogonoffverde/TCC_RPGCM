@@ -18,7 +18,7 @@ const esquemaCriar = z.object({
   nivel: z.number().int().min(1).max(20).optional(),
   xp: z.number().int().min(0).max(1000000).optional(),
   descricao: z.string().trim().max(2000).nullable().optional(),
-    retrato: z.enum(RETRATOS).optional(),
+  retrato: z.enum(RETRATOS).optional(),
   atributos: z
     .object({
       forca: valorAtributo,
@@ -59,22 +59,6 @@ router.post('/', async (req, res) => {
       atributos[chave] = valor;
     }
   }
-  const [resultado] = await conexao.query(
-  `INSERT INTO personagem (id_usuario, id_raca, id_classe, nome, nivel, xp, descricao, retrato)
-   VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-  [req.usuario.id_usuario, id_raca, id_classe, nome, nivel, xp, descricao ?? null, retrato ?? null]
-);
-const idPersonagem = resultado.insertId;
-
-res.status(201).json({
-  id_personagem: idPersonagem,
-  nome,
-  id_raca,
-  id_classe,
-  nivel,
-  xp,
-  retrato: retrato ?? null
-});
 
   let conexao;
   try {
@@ -89,9 +73,9 @@ res.status(201).json({
     await conexao.beginTransaction();
 
     const [resultado] = await conexao.query(
-      `INSERT INTO personagem (id_usuario, id_raca, id_classe, nome, nivel, xp, descricao)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [req.usuario.id_usuario, id_raca, id_classe, nome, nivel, xp, descricao ?? null]
+      `INSERT INTO personagem (id_usuario, id_raca, id_classe, nome, nivel, xp, descricao, retrato)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [req.usuario.id_usuario, id_raca, id_classe, nome, nivel, xp, descricao ?? null, retrato ?? null]
     );
     const idPersonagem = resultado.insertId;
 
@@ -111,7 +95,15 @@ res.status(201).json({
 
     await conexao.commit();
 
-    res.status(201).json({ id_personagem: idPersonagem, nome, id_raca, id_classe, nivel, xp });
+    res.status(201).json({
+      id_personagem: idPersonagem,
+      nome,
+      id_raca,
+      id_classe,
+      nivel,
+      xp,
+      retrato: retrato ?? null,
+    });
   } catch (erro) {
     if (conexao) {
       await conexao.rollback().catch(() => {});
@@ -124,6 +116,7 @@ res.status(201).json({
     }
   }
 });
+
 const esquemaListar = z.object({
   nome: z.string().trim().max(100).optional(),
   id_raca: z.coerce.number().int().positive().optional(),
@@ -157,7 +150,7 @@ router.get('/', async (req, res) => {
 
   try {
     const [linhas] = await pool.query(
-      `SELECT p.id_personagem, p.nome, p.nivel, p.xp, p.descricao, p.data_criacao,
+      `SELECT p.id_personagem, p.nome, p.nivel, p.xp, p.descricao, p.retrato, p.data_criacao,
               r.id_raca, r.nome AS raca,
               c.id_classe, c.nome AS classe
        FROM personagem p
@@ -173,6 +166,7 @@ router.get('/', async (req, res) => {
     res.status(500).json({ erro: 'Erro interno do servidor' });
   }
 });
+
 const esquemaId = z.coerce.number().int().positive();
 
 router.get('/:id', async (req, res) => {
@@ -247,6 +241,7 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ erro: 'Erro interno do servidor' });
   }
 });
+
 const esquemaAtualizar = z.object({
   nome: z.string().trim().min(2).max(100).optional(),
   id_raca: z.number().int().positive().optional(),
@@ -254,6 +249,7 @@ const esquemaAtualizar = z.object({
   nivel: z.number().int().min(1).max(20).optional(),
   xp: z.number().int().min(0).max(1000000).optional(),
   descricao: z.string().trim().max(2000).nullable().optional(),
+  retrato: z.enum(RETRATOS).nullable().optional(),
   atributos: z
     .object({
       forca: valorAtributo,
@@ -382,4 +378,5 @@ router.delete('/:id', async (req, res) => {
     res.status(500).json({ erro: 'Erro interno do servidor' });
   }
 });
+
 module.exports = router;
