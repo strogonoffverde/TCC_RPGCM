@@ -1203,3 +1203,17 @@ h1 {
   -webkit-user-select: none;
   -webkit-user-drag: none;
 }
+/* Retratos quadrados (pacote novo) */
+.retrato-moldura {
+  aspect-ratio: 1 / 1;
+}
+
+.retrato-miniatura {
+  aspect-ratio: 1 / 1;
+}
+
+.retrato-galeria {
+  max-height: 20rem;
+  overflow-y: auto;
+  padding: 0.25rem;
+}
