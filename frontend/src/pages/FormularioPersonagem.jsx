@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import SeletorRetrato from '../components/SeletorRetrato'
 import { removerToken } from '../services/api'
 import {
   atualizarPersonagem,
@@ -31,6 +32,7 @@ export default function FormularioPersonagem() {
   const [nivel, setNivel] = useState('1')
   const [xp, setXp] = useState('0')
   const [descricao, setDescricao] = useState('')
+  const [retrato, setRetrato] = useState('')
   const [atributos, setAtributos] = useState({
     forca: '10',
     destreza: '10',
@@ -66,6 +68,7 @@ export default function FormularioPersonagem() {
           setNivel(String(ficha.nivel))
           setXp(String(ficha.xp))
           setDescricao(ficha.descricao ?? '')
+          setRetrato(ficha.retrato ?? '')
           const base = {}
           for (const { chave } of ATRIBUTOS) {
             base[chave] = String(ficha.atributos_base[chave])
@@ -115,6 +118,7 @@ export default function FormularioPersonagem() {
         nivel: Number(nivel),
         xp: Number(xp),
         descricao: descricao.trim() === '' ? null : descricao,
+        retrato: retrato || undefined,
         atributos: valoresAtributos,
       }
 
@@ -165,6 +169,12 @@ export default function FormularioPersonagem() {
               : 'Preencha os dados básicos da ficha.'}
           </p>
         </div>
+
+        <SeletorRetrato
+          valor={retrato}
+          aoMudar={setRetrato}
+          desabilitado={carregando || salvando}
+        />
 
         <label>
           Nome

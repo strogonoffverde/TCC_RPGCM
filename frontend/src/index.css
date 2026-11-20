@@ -1184,3 +1184,22 @@ h1 {
     gap: 1.5rem;
   }
 }
+/* Retratos em imagem (proporção vertical) */
+.retrato-moldura {
+  aspect-ratio: 2 / 3;
+}
+
+.retrato-miniatura {
+  aspect-ratio: 2 / 3;
+}
+
+.retrato-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}
