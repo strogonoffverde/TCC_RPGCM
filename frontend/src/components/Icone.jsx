@@ -3,6 +3,7 @@ import { useState } from 'react'
 const ARQUIVOS_ITEM = {
   arma: 'item-arma',
   armadura: 'item-armadura',
+  escudo: 'item-escudo',
   equipamento: 'item-equipamento',
   material: 'item-material',
   pocao: 'item-pocao',

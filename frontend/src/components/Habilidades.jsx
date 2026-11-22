@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Icone from './Icone'
 import { removerToken } from '../services/api'
 import {
   adicionarHabilidade,
@@ -111,16 +112,19 @@ export default function Habilidades({ idPersonagem, nivelPersonagem, manaMaxima 
         <ul className="lista-inventario">
           {aprendidas.map((habilidade) => (
             <li key={habilidade.id_habilidade} className="item-inventario">
-              <div className="item-info">
-                <strong>{habilidade.nome}</strong>
-                <span className="etiqueta">{habilidade.tipo}</span>
-                {!habilidade.disponivel && (
-                  <span className="etiqueta etiqueta-aviso">Nível insuficiente</span>
-                )}
-                <p className="dica">{habilidade.descricao}</p>
-                <p className="dica">
-                  Nível mínimo {habilidade.nivel_minimo} · {textoMana(habilidade.custo_mana)}
-                </p>
+              <div className="item-principal">
+                <Icone categoria="habilidade" tipo={habilidade.tipo} />
+                <div className="item-info">
+                  <strong>{habilidade.nome}</strong>
+                  <span className="etiqueta">{habilidade.tipo}</span>
+                  {!habilidade.disponivel && (
+                    <span className="etiqueta etiqueta-aviso">Nível insuficiente</span>
+                  )}
+                  <p className="dica">{habilidade.descricao}</p>
+                  <p className="dica">
+                    Nível mínimo {habilidade.nivel_minimo} · {textoMana(habilidade.custo_mana)}
+                  </p>
+                </div>
               </div>
               <div className="item-acoes">
                 <button

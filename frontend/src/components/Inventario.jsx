@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Icone from './Icone'
 import { removerToken } from '../services/api'
 import {
   adicionarAoInventario,
@@ -120,12 +121,15 @@ export default function Inventario({ idPersonagem, aoAlterar }) {
         <ul className="lista-inventario">
           {inventario.map((item) => (
             <li key={item.id_item} className="item-inventario">
-              <div className="item-info">
-                <strong>{item.nome}</strong>
-                <span className="etiqueta">{item.tipo}</span>
-                <p className="dica">
-                  {item.descricao} ({item.valor.toLocaleString('pt-BR')} po cada)
-                </p>
+              <div className="item-principal">
+                <Icone tipo={item.tipo} nome={item.nome} />
+                <div className="item-info">
+                  <strong>{item.nome}</strong>
+                  <span className="etiqueta">{item.tipo}</span>
+                  <p className="dica">
+                    {item.descricao} ({item.valor.toLocaleString('pt-BR')} po cada)
+                  </p>
+                </div>
               </div>
               <div className="item-acoes">
                 <button

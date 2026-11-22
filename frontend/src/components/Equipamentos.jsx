@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Icone from './Icone'
 import { removerToken } from '../services/api'
 import {
   desequipar,
@@ -131,10 +132,13 @@ export default function Equipamentos({ idPersonagem, versao, aoAlterar }) {
         <ul className="lista-inventario">
           {equipados.map((item) => (
             <li key={item.id_equipamento} className="item-inventario">
-              <div className="item-info">
-                <strong>{item.nome}</strong>{' '}
-                <span className="etiqueta">{item.tipo}</span>
-                <p className="dica">{textoBonus(item)}</p>
+              <div className="item-principal">
+                <Icone tipo={item.tipo} nome={item.nome} />
+                <div className="item-info">
+                  <strong>{item.nome}</strong>{' '}
+                  <span className="etiqueta">{item.tipo}</span>
+                  <p className="dica">{textoBonus(item)}</p>
+                </div>
               </div>
               <div className="item-acoes">
                 <button
