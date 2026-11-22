@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import SeletorRetrato from '../components/SeletorRetrato'
+import { RETRATOS } from '../dados/retratos'
 import { removerToken } from '../services/api'
 import {
   atualizarPersonagem,
@@ -18,6 +19,25 @@ const ATRIBUTOS = [
   { chave: 'sabedoria', rotulo: 'Sabedoria' },
   { chave: 'carisma', rotulo: 'Carisma' },
 ]
+
+const NOMES_SORTEIO = [
+  'Aldric', 'Brenna', 'Cassian', 'Dara', 'Eldrin', 'Fenna',
+  'Gorim', 'Helga', 'Ivor', 'Jora', 'Kael', 'Lyra',
+  'Mirel', 'Nyx', 'Orin', 'Perrin', 'Quill', 'Rhea',
+  'Soren', 'Tamsin', 'Ulric', 'Vesper', 'Wynn', 'Xander',
+  'Yara', 'Zeno', 'Borin', 'Elara', 'Thalia', 'Torvin',
+]
+
+function sortearDaLista(lista) {
+  return lista[Math.floor(Math.random() * lista.length)]
+}
+
+// 4d6 descartando o menor dado, como no D&D
+function rolarAtributo() {
+  const dados = [0, 0, 0, 0].map(() => 1 + Math.floor(Math.random() * 6))
+  dados.sort((a, b) => a - b)
+  return dados[1] + dados[2] + dados[3]
+}
 
 export default function FormularioPersonagem() {
   const { id } = useParams()
@@ -100,6 +120,24 @@ export default function FormularioPersonagem() {
     setAtributos((atual) => ({ ...atual, [chave]: valor }))
   }
 
+  function sortearPersonagem() {
+    if (racas.length === 0 || classes.length === 0) return
+
+    setErro('')
+    setNome(sortearDaLista(NOMES_SORTEIO))
+    setIdRaca(String(sortearDaLista(racas).id_raca))
+    setIdClasse(String(sortearDaLista(classes).id_classe))
+    setNivel('1')
+    setXp('0')
+    setRetrato(sortearDaLista(RETRATOS).chave)
+
+    const sorteados = {}
+    for (const { chave } of ATRIBUTOS) {
+      sorteados[chave] = String(rolarAtributo())
+    }
+    setAtributos(sorteados)
+  }
+
   async function enviar(evento) {
     evento.preventDefault()
     setErro('')
@@ -169,6 +207,22 @@ export default function FormularioPersonagem() {
               : 'Preencha os dados básicos da ficha.'}
           </p>
         </div>
+
+        {!editando && (
+          <div className="acoes">
+            <button
+              type="button"
+              className="botao-secundario"
+              onClick={sortearPersonagem}
+              disabled={carregando || salvando}
+            >
+              Sortear personagem
+            </button>
+            <span className="dica">
+              Preenche o formulário com dados aleatórios. Você pode ajustar antes de criar.
+            </span>
+          </div>
+        )}
 
         <SeletorRetrato
           valor={retrato}

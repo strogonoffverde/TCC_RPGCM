@@ -1247,3 +1247,18 @@ h1 {
   gap: 0.75rem;
   margin-top: 0.85rem;
 }
+/* Imagem de fundo */
+body {
+  background: var(--fundo);
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, rgba(21, 18, 15, 0.25) 0%, rgba(21, 18, 15, 0.82) 100%),
+    url('/fundo/fundo.jpg') center / cover no-repeat;
+}
