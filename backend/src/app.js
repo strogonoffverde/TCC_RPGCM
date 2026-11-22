@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const pool = require('./config/db');
+const { PASTA_UPLOADS } = require('./services/retratos');
 const authRoutes = require('./routes/auth');
 const usuariosRoutes = require('./routes/usuarios');
 const catalogoRoutes = require('./routes/catalogo');
@@ -9,11 +10,13 @@ const inventarioRoutes = require('./routes/inventario');
 const habilidadesRoutes = require('./routes/habilidades');
 const personagensRoutes = require('./routes/personagens');
 const equipamentosRoutes = require('./routes/equipamentos');
+const uploadsRoutes = require('./routes/uploads');
 
 const app = express();
 
 app.use(helmet());
 app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173' }));
+app.use('/api/uploads', express.json({ limit: '1mb' }));
 app.use(express.json());
 
 app.get('/api/saude', (req, res) => {
@@ -40,6 +43,16 @@ app.use('/api/personagens/:id/inventario', inventarioRoutes);
 app.use('/api/personagens/:id/habilidades', habilidadesRoutes);
 app.use('/api/personagens/:id/equipamentos', equipamentosRoutes);
 app.use('/api/personagens', personagensRoutes);
+app.use('/api/uploads', uploadsRoutes);
+
+app.use(
+  '/uploads/retratos',
+  (req, res, next) => {
+    res.set('Cross-Origin-Resource-Policy', 'cross-origin');
+    next();
+  },
+  express.static(PASTA_UPLOADS, { index: false, maxAge: '30d' })
+);
 
 app.use((req, res) => {
   res.status(404).json({ erro: 'não encontramos' });

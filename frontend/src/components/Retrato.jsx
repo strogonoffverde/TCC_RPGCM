@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { buscarRetrato, caminhoRetrato } from '../dados/retratos'
+import { buscarRetrato, caminhoRetrato, ehUpload } from '../dados/retratos'
 
 function Silhueta({ acessibilidade }) {
   return (
@@ -16,19 +16,19 @@ function Silhueta({ acessibilidade }) {
 
 export default function Retrato({ chave, nome }) {
   const [chaveComFalha, setChaveComFalha] = useState(null)
-  const retrato = buscarRetrato(chave)
+  const valido = Boolean(buscarRetrato(chave)) || ehUpload(chave)
   const acessibilidade = nome
     ? { role: 'img', 'aria-label': nome }
     : { 'aria-hidden': true }
 
-  if (!retrato || chaveComFalha === chave) {
+  if (!valido || chaveComFalha === chave) {
     return <Silhueta acessibilidade={acessibilidade} />
   }
 
   return (
     <img
       className="retrato-img"
-      src={caminhoRetrato(retrato.chave)}
+      src={caminhoRetrato(chave)}
       alt={nome || ''}
       draggable={false}
       onError={() => setChaveComFalha(chave)}

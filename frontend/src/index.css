@@ -1239,3 +1239,11 @@ h1 {
   flex: 1;
   min-width: 0;
 }
+/* Envio de imagem do jogador */
+.retrato-envio {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+}

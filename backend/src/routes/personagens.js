@@ -3,11 +3,12 @@ const { z } = require('zod');
 const pool = require('../config/db');
 const autenticar = require('../middlewares/autenticar');
 const { CHAVES_ATRIBUTOS, calcularAtributosFinais, calcularStatus } = require('../services/status');
-const { RETRATOS } = require('../services/retratos');
+const { validarRetrato } = require('../services/retratos');
 
 const router = express.Router();
 
 router.use(autenticar);
+router.use(validarRetrato);
 
 const valorAtributo = z.number().int().min(1).max(20).optional();
 
@@ -18,7 +19,7 @@ const esquemaCriar = z.object({
   nivel: z.number().int().min(1).max(20).optional(),
   xp: z.number().int().min(0).max(1000000).optional(),
   descricao: z.string().trim().max(2000).nullable().optional(),
-  retrato: z.enum(RETRATOS).optional(),
+  retrato: z.string().max(40).optional(),
   atributos: z
     .object({
       forca: valorAtributo,
@@ -249,7 +250,7 @@ const esquemaAtualizar = z.object({
   nivel: z.number().int().min(1).max(20).optional(),
   xp: z.number().int().min(0).max(1000000).optional(),
   descricao: z.string().trim().max(2000).nullable().optional(),
-  retrato: z.enum(RETRATOS).nullable().optional(),
+  retrato: z.string().max(40).nullable().optional(),
   atributos: z
     .object({
       forca: valorAtributo,
