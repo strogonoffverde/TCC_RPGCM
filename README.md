@@ -1,10 +1,26 @@
-# RPGCM - RPG Character Manager
+🎲 **RPGCM – RPG Character Manager**
 
-Sistema para criar, organizar e gerenciar fichas de personagens de RPG.
+O RPGCM é um projeto independente idealizado e desenvolvido por mim, Davi Ribeiro, com o objetivo de criar uma plataforma web para criação, personalização e gerenciamento de personagens de RPG de mesa.
 
-Projeto de TCC - Técnico em Desenvolvimento de Sistemas.
-Desenvolvido por ArcanoStudio para o cliente RPG Create.
+A aplicação busca facilitar a organização de fichas de personagens, reunindo informações como raças, classes, atributos, níveis e experiência em um único ambiente.
 
-## Tecnologias
+**Principais funcionalidades:**
+- Cadastro e autenticação de usuários.
+- Criação e gerenciamento de personagens.
+- Consulta de raças e classes.
+- Gerenciamento de atributos e progressão dos personagens.
+- Integração com banco de dados.
+- Consumo de API externa para obtenção de informações de RPG.
 
-React, Node.js, Express, MySQL, JWT.
+**Tecnologias utilizadas:**
+- React e JavaScript (Frontend).
+- Node.js e Express (Backend).
+- MySQL (Banco de dados).
+- JWT (Autenticação).
+- API REST.
+
+O projeto representa minha experiência prática com desenvolvimento Full Stack, integração entre frontend e backend, construção de APIs, autenticação de usuários e modelagem de bancos de dados.
+
+Atualmente, o RPGCM é mantido e desenvolvido de forma independente por mim.
+
+**Desenvolvedor e idealizador:** Davi Ribeiro.
